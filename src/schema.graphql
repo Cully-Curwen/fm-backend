@@ -1,0 +1,122 @@
+type Query {
+  
+}
+
+type Muttation {
+
+}
+
+type CustomerAuthPayload {
+  token: String!
+  customer: Customer!
+}
+
+type MarketAdminAuthPayload {
+  token: String!
+  markets: [Market!]!
+}
+
+type TraderAdminAuthPayload {
+  token: String!
+  traderCards: [TraderCard!]!
+}
+
+type MarketAdmin {
+  email: String!
+  firstName: String!
+  lastName: String!
+}
+
+type TraderAdmin {
+  email: String!
+  firstName: String!
+  lastName: String!
+}
+
+type Customer {
+  email: String!
+  firstName: String!
+  lastName: String!
+  shoppingCarts: [MarketCart!]!
+}
+
+type MarketCart {
+  market_id: String!
+  items: [ItemsCart!]!
+}
+
+type ItemsCart {
+  trader_id: String!
+  market_id: String!
+  name: String!
+  description: String!
+  quantity: Int!
+  price: Int!
+}
+
+type Market {
+  admin_id: String!
+  name: String!
+  blurb: String!
+  address: String
+  geoLocation: GeoPoint!
+  directions: String
+  imgUrl: String
+  openHours: OpenHours!
+}
+
+type GeoPoint {
+  type: String!
+  coordinates: [Float!]!
+}
+
+type OpenHours {
+  openTime: String!
+  closeTime: String!
+  tradingDay: String!
+}
+
+type TraderCard {
+  admin_id: String!
+  name: String!
+  blurb: String!
+  imgUrl: String
+  links: UrlLinks
+  produceTags: [String!]!
+  inventory: [Items!]!
+}
+
+type UrlLinks {
+  website: String
+  email: String
+  facebook: String
+  twitter: String
+  Instagram: String
+}
+
+type ItemsTrader {
+  trader_id: String!
+  market_id: String!
+  name: String!
+  description: String!
+  stock: Int!
+  price: Int!
+}
+
+type Order {
+  customer_id: String!
+  market_id: String!
+  orderCode: String!
+  orderItems: [ItemsOrder!]!
+  totalPrice: Int!
+  date: String!
+}
+
+type ItemsOrder {
+  trader_id: String!
+  market_id: String!
+  name: String!
+  description: String!
+  quantity: Int!
+  price: Int!
+}
