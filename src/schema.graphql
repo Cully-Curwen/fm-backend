@@ -1,10 +1,43 @@
-# type Query {
-  
-# }
+type Query {
+  administeredMarkets(): [Market!]
+  administeredTraders(): [TraderCard!]  
 
-# type Muttation {
+  marketList(): [Market!]
+  market(): Market
+  trader(): TraderCard
+}
 
-# }
+type Mutation {
+  customerRegister(): CustomerAuthPayload
+  customerLogin(): CustomerAuthPayload
+  customerUpdate(): Customer
+
+  marketAdminRegister(): MarketAdminAuthPayload
+  marketAdminLogin(): MarketAdminAuthPayload
+  marketAdminUpdate(): MarketAdmin
+
+  traderAdminRegister(): TraderAdminAuthPayload
+  traderAdminLogin(): TraderAdminAuthPayload
+  traderAdminUpdate(): TraderAdmin
+
+  marketCreate(): Market
+  marketUpdate(): Market
+
+  addTraderToMarket(): Market
+  removeTraderFromMarket(): Market
+
+  traderCardCreate(): TraderCard
+  traderCardUpdate(): TraderCard
+
+  inventoryItemCreate(): TraderCard
+  inventroyItemUpdate(): TraderCard
+  inventoryItemRemove(): TraderCard
+
+  cartAddItem(): MarketCart
+  cartRemoveItem(): MarketCart
+
+  checkout(): Order
+}
 
 type CustomerAuthPayload {
   token: String!
@@ -13,11 +46,13 @@ type CustomerAuthPayload {
 
 type MarketAdminAuthPayload {
   token: String!
+  marketAdmin: MarketAdmin!
   markets: [Market!]!
 }
 
 type TraderAdminAuthPayload {
   token: String!
+  traderAdmin: TraderAdmin!
   traderCards: [TraderCard!]!
 }
 
@@ -63,6 +98,7 @@ type Market {
   directions: String
   imgUrl: String
   openHours: OpenHours!
+  traders: [TraderCard!]!
 }
 
 type GeoPoint {
@@ -83,7 +119,7 @@ type TraderCard {
   imgUrl: String
   links: UrlLinks
   produceTags: [String!]!
-  inventory: [ItemsTrader!]!
+  inventory: [ItemsInventory!]!
 }
 
 type UrlLinks {
@@ -94,7 +130,7 @@ type UrlLinks {
   Instagram: String
 }
 
-type ItemsTrader {
+type ItemsInventory {
   trader_id: String!
   market_id: String!
   name: String!
