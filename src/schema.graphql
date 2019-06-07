@@ -1,10 +1,10 @@
-type Query {
+# type Query {
   
-}
+# }
 
-type Muttation {
+# type Muttation {
 
-}
+# }
 
 type CustomerAuthPayload {
   token: String!
@@ -83,7 +83,7 @@ type TraderCard {
   imgUrl: String
   links: UrlLinks
   produceTags: [String!]!
-  inventory: [Items!]!
+  inventory: [ItemsTrader!]!
 }
 
 type UrlLinks {
