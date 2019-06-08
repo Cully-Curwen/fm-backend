@@ -13,6 +13,7 @@ const resolvers = {
 };
 
 const client = new MongoClient(mongodbUri, { useNewUrlParser: true });
+
 client.connect(err => {
   if (err) throw new Error('Failed to connect to MongoDB Cluster')
   else console.log('Connected to MongoDB Cluster')
@@ -29,6 +30,6 @@ client.connect(err => {
   };
   
   server.start(options, ({ port }) =>
-  console.log(`Server started, listening on port ${port} for incoming requests.`),
+    console.log(`Server started, listening on port ${port} for incoming requests.`),
   )
 });
