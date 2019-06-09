@@ -18,7 +18,7 @@ type Mutation {
 
   traderAdminRegister(email: String!, firstName: String!, lastName: String!, password: String!): TraderAdminAuthPayload
   traderAdminLogin(email: String!, password: String!): TraderAdminAuthPayload
-  # traderAdminUpdate(email: String, firstName: String, lastName: String, password: String!, newPassword: String): TraderAdmin
+  traderAdminUpdate(email: String, firstName: String, lastName: String, password: String!, newPassword: String): TraderAdmin
 
   # marketCreate(): Market
   # marketUpdate(): Market

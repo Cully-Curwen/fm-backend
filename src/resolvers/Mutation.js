@@ -160,13 +160,33 @@ async function traderAdminLogin(parent, args, context, info) {
   
   const valid = await bcrypt.compare(args.password, traderAdmin.password);
   if (!valid) throw new Error('Email or Password details are invalid');
-
+  
   const token = jwt.sign({ traderAdminId: traderAdmin._id }, APP_SECRET);
   
   return {
     token,
     traderAdmin,
   };
+};
+
+async function traderAdminUpdate(parent, args, context, info) {
+  const TraderAdmins = context.db.collection('traderAdmins');
+  const _id = ObjectId(getTraderAdminId(context));
+  const traderAdminAuth = await TraderAdmins.findOne({ _id });
+  if (!traderAdminAuth) throw new Error('Token invalid');
+
+  const valid = await bcrypt.compare(args.password, traderAdminAuth.password);
+  if (!valid) throw new Error('Invalid password');
+
+  const password = args.newPassword ? await bcrypt.hash(args.newPassword, 12) : traderAdminAuth.password; 
+  const { email, firstName, lastName } = args;
+  const newDetails = { password };
+  if (email) newDetails.email = email;
+  if (firstName) newDetails.firstName = firstName;
+  if (lastName) newDetails.lastName = lastName;
+  TraderAdmins.updateOne({_id }, {$set: newDetails});
+  
+  return TraderAdmins.findOne({ _id });
 };
 
 module.exports = {
@@ -178,4 +198,5 @@ module.exports = {
   marketAdminUpdate,
   traderAdminRegister,
   traderAdminLogin,
+  traderAdminUpdate,
 };
