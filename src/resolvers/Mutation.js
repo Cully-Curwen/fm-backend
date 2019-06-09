@@ -108,10 +108,31 @@ async function marketAdminLogin(parent, args, context, info) {
   };
 };
 
+async function marketAdminUpdate(parent, args, context, info) {
+  const MarketAdmins = context.db.collection('marketAdmins');
+  const _id = ObjectId(getMarketAdminId(context));
+  const marketAdminAuth = await MarketAdmins.findOne({ _id });
+  if (!marketAdminAuth) throw new Error('Token invalid');
+
+  const valid = await bcrypt.compare(args.password, marketAdminAuth.password);
+  if (!valid) throw new Error('Invalid password');
+
+  const password = args.newPassword ? await bcrypt.hash(args.newPassword, 12) : marketAdminAuth.password; 
+  const { email, firstName, lastName } = args;
+  const newDetails = { password };
+  if (email) newDetails.email = email;
+  if (firstName) newDetails.firstName = firstName;
+  if (lastName) newDetails.lastName = lastName;
+  MarketAdmins.updateOne({_id }, {$set: newDetails});
+  
+  return MarketAdmins.findOne({ _id });
+};
+
 module.exports = {
   customerRegister,
   customerLogin,
   customerUpdate,
   marketAdminRegister,
   marketAdminLogin,
+  marketAdminUpdate,
 };
