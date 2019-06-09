@@ -9,7 +9,8 @@ const MarketAdmin = require('./resolvers/MarketAdmin');
 const MarketAdminAuthPayload = require('./resolvers/MarketAdminAuthPayload');
 const TraderAdmin = require('./resolvers/TraderAdmin');
 const TraderAdminAuthPayload = require('./resolvers/TraderAdminAuthPayload');
-const Market = require('./resolvers/Market')
+const Market = require('./resolvers/Market');
+const TraderCard = require('./resolvers/TraderCard');
 
 const resolvers = {
   Query,
@@ -20,6 +21,7 @@ const resolvers = {
   TraderAdmin,
   TraderAdminAuthPayload,
   Market,
+  TraderCard,
 };
 
 const client = new MongoClient(mongodbUri, { useNewUrlParser: true });

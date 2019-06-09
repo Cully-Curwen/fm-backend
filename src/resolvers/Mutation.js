@@ -193,9 +193,9 @@ async function marketCreate(parent, args, context, info) {
   const Markets = context.db.collection('markets');
   const admin = ObjectId(getMarketAdminId(context));
 
-  const rtnDoc = await Markets.insertOne({ admins: [admin], ...args, traders: [] })
-  
-  const id = rtnDoc.insertedId
+  const rtnDoc = await Markets.insertOne({ admins: [admin], ...args, traders: [] });
+  const id = rtnDoc.insertedId;
+
   return await Markets.findOne({ _id: id });
 };
 
@@ -213,17 +213,27 @@ async function marketUpdate(parent, args, context, info) {
   if (directions) newDetails.directions = directions;
   if (imgUrl) newDetails.imgUrl = imgUrl;
   if (openHours) newDetails.openHours = openHours;
-
+  
   const rtnDoc = await Markets.findOneAndUpdate(
     { _id , admins: admin}, 
     { $set: newDetails }, 
     { returnOriginal: false }
   );
   const market = rtnDoc.value;
-
+  
   if (market) {
     return market;
-  } else throw new Error('Update failed; you do not have admin rights for this task')
+  } else throw new Error('Update failed; you do not have admin rights for this task');
+};
+  
+async function traderCardCreate(parent, args, context, info) {
+  const TraderCards = context.db.collection('traderCards');
+  const admin = ObjectId(getTraderAdminId(context));
+  
+  const rtnDoc = await TraderCards.insertOne({ admins: [admin], ...args, inventory: [] });
+  const id = rtnDoc.insertedId;
+
+  return await TraderCards.findOne({ _id: id });
 };
 
 module.exports = {
@@ -238,4 +248,5 @@ module.exports = {
   traderAdminUpdate,
   marketCreate,
   marketUpdate,
+  traderCardCreate,
 };

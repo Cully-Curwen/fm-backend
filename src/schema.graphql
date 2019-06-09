@@ -83,7 +83,14 @@ type Mutation {
   # addTraderToMarket(): Market
   # removeTraderFromMarket(): Market
 
-  # traderCardCreate(): TraderCard
+  traderCardCreate(
+    name: String!,
+    blurb: String!,
+    imgUrl: String,
+    links: UrlLinksInput,
+    produceTags: [String!]!,
+  ): TraderCard
+
   # traderCardUpdate(): TraderCard
 
   # inventoryItemCreate(): TraderCard
@@ -196,6 +203,14 @@ type TraderCard {
 }
 
 type UrlLinks {
+  website: String
+  email: String
+  facebook: String
+  twitter: String
+  Instagram: String
+}
+
+input UrlLinksInput {
   website: String
   email: String
   facebook: String
