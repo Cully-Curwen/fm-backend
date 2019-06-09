@@ -64,7 +64,7 @@ async function customerUpdate(parent, args, context, info) {
   if (lastName) newDetails.lastName = lastName;
   Customers.updateOne({_id }, {$set: newDetails});
   
-  return Customers.findOne({ _id });
+  return await Customers.findOne({ _id });
 };
 
 async function marketAdminRegister(parent, args, context, info) {
@@ -125,7 +125,7 @@ async function marketAdminUpdate(parent, args, context, info) {
   if (lastName) newDetails.lastName = lastName;
   MarketAdmins.updateOne({_id }, {$set: newDetails});
   
-  return MarketAdmins.findOne({ _id });
+  return await MarketAdmins.findOne({ _id });
 };
 
 async function traderAdminRegister(parent, args, context, info) {
@@ -186,7 +186,30 @@ async function traderAdminUpdate(parent, args, context, info) {
   if (lastName) newDetails.lastName = lastName;
   TraderAdmins.updateOne({_id }, {$set: newDetails});
   
-  return TraderAdmins.findOne({ _id });
+  return await TraderAdmins.findOne({ _id });
+};
+
+async function marketCreate(parent, args, context, info) {
+  const Markets = context.db.collection('markets');
+  const admin = ObjectId(getMarketAdminId(context));
+  console.log('args: ', args);
+
+  const rtnDoc = await Markets.insertOne({
+    admins: [admin],
+    name: args.name,
+    blurb: args.blurb,
+    address: args.address,
+    geoLocation: args.geoLocation,
+    directions: args.directions,
+    imgUrl: args.imgUrl,
+    openHours: args.openHours,
+    traders: [],
+  });
+
+  const id = rtnDoc.insertedId
+  output = await Markets.findOne({ _id: id });
+  console.log('output: ', output)
+  return output;
 };
 
 module.exports = {
@@ -199,4 +222,5 @@ module.exports = {
   traderAdminRegister,
   traderAdminLogin,
   traderAdminUpdate,
+  marketCreate,
 };

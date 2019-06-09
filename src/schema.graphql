@@ -8,19 +8,60 @@ type Query {
 }
 
 type Mutation {
-  customerRegister(email: String!, firstName: String!, lastName: String!, password: String!): CustomerAuthPayload
+  customerRegister(
+    email: String!, 
+    firstName: String!, 
+    lastName: String!, 
+    password: String!
+  ): CustomerAuthPayload
   customerLogin(email: String!, password: String!): CustomerAuthPayload
-  customerUpdate(email: String, firstName: String, lastName: String, password: String!, newPassword: String): Customer
+  customerUpdate(
+    email: String, 
+    firstName: String, 
+    lastName: String, 
+    password: String!, 
+    newPassword: String
+  ): Customer
 
-  marketAdminRegister(email: String!, firstName: String!, lastName: String!, password: String!): MarketAdminAuthPayload
+  marketAdminRegister(
+    email: String!, 
+    firstName: String!, 
+    lastName: String!, 
+    password: String!
+  ): MarketAdminAuthPayload
   marketAdminLogin(email: String!, password: String!): MarketAdminAuthPayload
-  marketAdminUpdate(email: String, firstName: String, lastName: String, password: String!, newPassword: String): MarketAdmin
+  marketAdminUpdate(
+    email: String, 
+    firstName: String, 
+    lastName: String, 
+    password: String!, 
+    newPassword: String
+  ): MarketAdmin
 
-  traderAdminRegister(email: String!, firstName: String!, lastName: String!, password: String!): TraderAdminAuthPayload
+  traderAdminRegister(
+    email: String!, 
+    firstName: String!, 
+    lastName: String!, 
+    password: String!
+  ): TraderAdminAuthPayload
   traderAdminLogin(email: String!, password: String!): TraderAdminAuthPayload
-  traderAdminUpdate(email: String, firstName: String, lastName: String, password: String!, newPassword: String): TraderAdmin
+  traderAdminUpdate(
+    email: String, 
+    firstName: String, 
+    lastName: String, 
+    password: String!, 
+    newPassword: String
+  ): TraderAdmin
 
-  # marketCreate(): Market
+  marketCreate(
+    name: String!, 
+    blurb: String!, 
+    address: String, 
+    geoLocation: GeoPointInput!, 
+    directions: String,
+    imgUrl: String,
+    openHours: OpenHoursInput!,
+  ): Market
   # marketUpdate(): Market
 
   # addTraderToMarket(): Market
@@ -110,7 +151,18 @@ type GeoPoint {
   coordinates: [Float!]!
 }
 
+input GeoPointInput {
+  type: String!
+  coordinates: [Float!]!
+}
+
 type OpenHours {
+  openTime: String!
+  closeTime: String!
+  tradingDay: String!
+}
+
+input OpenHoursInput {
   openTime: String!
   closeTime: String!
   tradingDay: String!
