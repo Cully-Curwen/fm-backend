@@ -13,7 +13,7 @@ type Mutation {
   customerUpdate(email: String, firstName: String, lastName: String, password: String!, newPassword: String): Customer
 
   marketAdminRegister(email: String!, firstName: String!, lastName: String!, password: String!): MarketAdminAuthPayload
-  # marketAdminLogin(email: String!, password: String!): MarketAdminAuthPayload
+  marketAdminLogin(email: String!, password: String!): MarketAdminAuthPayload
   # marketAdminUpdate(email: String, firstName: String, lastName: String, password: String!, newPassword: String): MarketAdmin
 
   # traderAdminRegister(email: String!, firstName: String!, lastName: String!, password: String!): TraderAdminAuthPayload

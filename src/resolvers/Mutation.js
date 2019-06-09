@@ -92,9 +92,26 @@ async function marketAdminRegister(parent, args, context, info) {
   };
 };
 
+async function marketAdminLogin(parent, args, context, info) {
+  const MarketAdmins = context.db.collection('marketAdmins');
+  const marketAdmin = await MarketAdmins.findOne({ email: args.email });
+  if (!marketAdmin) throw new Error('Email or Password details are invalid');
+  
+  const valid = await bcrypt.compare(args.password, marketAdmin.password);
+  if (!valid) throw new Error('Email or Password details are invalid');
+
+  const token = jwt.sign({ marketAdminId: marketAdmin._id }, APP_SECRET);
+  
+  return {
+    token,
+    marketAdmin,
+  };
+};
+
 module.exports = {
   customerRegister,
   customerLogin,
   customerUpdate,
   marketAdminRegister,
+  marketAdminLogin,
 };
