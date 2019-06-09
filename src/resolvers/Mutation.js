@@ -192,8 +192,7 @@ async function traderAdminUpdate(parent, args, context, info) {
 async function marketCreate(parent, args, context, info) {
   const Markets = context.db.collection('markets');
   const admin = ObjectId(getMarketAdminId(context));
-  console.log('args: ', args);
-
+  
   const rtnDoc = await Markets.insertOne({
     admins: [admin],
     name: args.name,
@@ -205,11 +204,36 @@ async function marketCreate(parent, args, context, info) {
     openHours: args.openHours,
     traders: [],
   });
-
+  
   const id = rtnDoc.insertedId
-  output = await Markets.findOne({ _id: id });
-  console.log('output: ', output)
-  return output;
+  return await Markets.findOne({ _id: id });
+};
+
+async function marketUpdate(parent, args, context, info) {
+  const Markets = context.db.collection('markets');
+  const admin = ObjectId(getMarketAdminId(context));
+  const _id = ObjectId(args.id);
+  
+  const newDetails = {};
+  const { name, blurb, address, geoLocation, directions, imgUrl, openHours } = args;
+  if (name) newDetails.name = name;
+  if (blurb) newDetails.blurb = blurb;
+  if (address) newDetails.address = address;
+  if (geoLocation) newDetails.geoLocation = geoLocation;
+  if (directions) newDetails.directions = directions;
+  if (imgUrl) newDetails.imgUrl = imgUrl;
+  if (openHours) newDetails.openHours = openHours;
+
+  const rtnDoc = await Markets.findOneAndUpdate(
+    { _id , admins: admin}, 
+    { $set: newDetails }, 
+    { returnOriginal: false }
+  );
+  const market = rtnDoc.value;
+
+  if (market) {
+    return market;
+  } else throw new Error('Update failed; you do not have admin rights for this task')
 };
 
 module.exports = {
@@ -223,4 +247,5 @@ module.exports = {
   traderAdminLogin,
   traderAdminUpdate,
   marketCreate,
+  marketUpdate,
 };

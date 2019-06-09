@@ -14,7 +14,9 @@ type Mutation {
     lastName: String!, 
     password: String!
   ): CustomerAuthPayload
+
   customerLogin(email: String!, password: String!): CustomerAuthPayload
+  
   customerUpdate(
     email: String, 
     firstName: String, 
@@ -29,7 +31,9 @@ type Mutation {
     lastName: String!, 
     password: String!
   ): MarketAdminAuthPayload
+  
   marketAdminLogin(email: String!, password: String!): MarketAdminAuthPayload
+  
   marketAdminUpdate(
     email: String, 
     firstName: String, 
@@ -44,7 +48,9 @@ type Mutation {
     lastName: String!, 
     password: String!
   ): TraderAdminAuthPayload
+  
   traderAdminLogin(email: String!, password: String!): TraderAdminAuthPayload
+  
   traderAdminUpdate(
     email: String, 
     firstName: String, 
@@ -62,7 +68,17 @@ type Mutation {
     imgUrl: String,
     openHours: OpenHoursInput!,
   ): Market
-  # marketUpdate(): Market
+  
+  marketUpdate(
+    id: ID!,
+    name: String, 
+    blurb: String, 
+    address: String, 
+    geoLocation: GeoPointInput, 
+    directions: String,
+    imgUrl: String,
+    openHours: OpenHoursInput, 
+  ): Market
 
   # addTraderToMarket(): Market
   # removeTraderFromMarket(): Market
