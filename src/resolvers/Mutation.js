@@ -192,18 +192,8 @@ async function traderAdminUpdate(parent, args, context, info) {
 async function marketCreate(parent, args, context, info) {
   const Markets = context.db.collection('markets');
   const admin = ObjectId(getMarketAdminId(context));
-  
-  const rtnDoc = await Markets.insertOne({
-    admins: [admin],
-    name: args.name,
-    blurb: args.blurb,
-    address: args.address,
-    geoLocation: args.geoLocation,
-    directions: args.directions,
-    imgUrl: args.imgUrl,
-    openHours: args.openHours,
-    traders: [],
-  });
+
+  const rtnDoc = await Markets.insertOne({ admins: [admin], ...args, traders: [] })
   
   const id = rtnDoc.insertedId
   return await Markets.findOne({ _id: id });
