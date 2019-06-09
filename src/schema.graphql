@@ -10,7 +10,7 @@ type Query {
 type Mutation {
   customerRegister(email: String!, firstName: String!, lastName: String!, password: String!): CustomerAuthPayload
   customerLogin(email: String!, password: String!): CustomerAuthPayload
-  # customerUpdate(email: String, firstName: String, lastName: String, password: String!, newPassword: String): Customer
+  customerUpdate(email: String, firstName: String, lastName: String, password: String!, newPassword: String): Customer
 
   # marketAdminRegister(email: String!, firstName: String!, lastName: String!, password: String!): MarketAdminAuthPayload
   # marketAdminLogin(email: String!, password: String!): MarketAdminAuthPayload
