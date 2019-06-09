@@ -12,7 +12,7 @@ type Mutation {
   customerLogin(email: String!, password: String!): CustomerAuthPayload
   customerUpdate(email: String, firstName: String, lastName: String, password: String!, newPassword: String): Customer
 
-  # marketAdminRegister(email: String!, firstName: String!, lastName: String!, password: String!): MarketAdminAuthPayload
+  marketAdminRegister(email: String!, firstName: String!, lastName: String!, password: String!): MarketAdminAuthPayload
   # marketAdminLogin(email: String!, password: String!): MarketAdminAuthPayload
   # marketAdminUpdate(email: String, firstName: String, lastName: String, password: String!, newPassword: String): MarketAdmin
 
@@ -94,7 +94,7 @@ type ItemsCart {
 
 type Market {
   id: ID!
-  admin_id: String!
+  admins: [String!]!
   name: String!
   blurb: String!
   address: String
@@ -118,7 +118,7 @@ type OpenHours {
 
 type TraderCard {
   id: ID!
-  admin_id: String!
+  admins: [String!]!
   name: String!
   blurb: String!
   imgUrl: String

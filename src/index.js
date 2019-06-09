@@ -5,11 +5,15 @@ const { mongodbUri } = require('./secrets');
 const Query = require('./resolvers/Query');
 const Mutation = require('./resolvers/Mutation');
 const Customer = require('./resolvers/Customer');
+const MarketAdmin = require('./resolvers/MarketAdmin');
+const MarketAdminAuthPayload = require('./resolvers/MarketAdminAuthPayload');
 
 const resolvers = {
   Query,
   Mutation,
   Customer,
+  MarketAdmin,
+  MarketAdminAuthPayload,
 };
 
 const client = new MongoClient(mongodbUri, { useNewUrlParser: true });

@@ -7,8 +7,8 @@ const { APP_SECRET } = require('../secrets');
 
 async function customerRegister(parent, args, context, info) {
   const Customers = context.db.collection('customers');
-  const password = await bcrypt.hash(args.password, 10);
-  const testCustomer =  await Customers.findOne({ lastName: args.email });
+  const password = await bcrypt.hash(args.password, 12);
+  const testCustomer =  await Customers.findOne({ email: args.email });
   if (testCustomer) {
     throw new Error("An account already exists for this email address");
   };
@@ -56,7 +56,7 @@ async function customerUpdate(parent, args, context, info) {
   const valid = await bcrypt.compare(args.password, customerAuth.password);
   if (!valid) throw new Error('Invalid password');
 
-  const password = args.newPassword ? await bcrypt.hash(args.newPassword, 10) : customerAuth.password; 
+  const password = args.newPassword ? await bcrypt.hash(args.newPassword, 12) : customerAuth.password; 
   const { email, firstName, lastName } = args;
   const newDetails = { password };
   if (email) newDetails.email = email;
@@ -65,10 +65,36 @@ async function customerUpdate(parent, args, context, info) {
   Customers.updateOne({_id }, {$set: newDetails});
   
   return Customers.findOne({ _id });
-}
+};
+
+async function marketAdminRegister(parent, args, context, info) {
+  const MarketAdmins = context.db.collection('marketAdmins');
+  const password = await bcrypt.hash(args.password, 12);
+  const testMarketAdmin =  await MarketAdmins.findOne({ email: args.email });
+  if (testMarketAdmin) {
+    throw new Error("An account already exists for this email address");
+  };
+  
+  const rtnDoc = await MarketAdmins.insertOne({
+    email: args.email,
+    firstName: args.firstName,
+    lastName: args.lastName,
+    password,
+  });
+  
+  const id = rtnDoc.insertedId
+  const marketAdmin = await MarketAdmins.findOne({ _id: id });
+  const token = jwt.sign({ marketAdminId: id }, APP_SECRET);
+  
+  return {
+    token,
+    marketAdmin,
+  };
+};
 
 module.exports = {
   customerRegister,
   customerLogin,
   customerUpdate,
+  marketAdminRegister,
 };
