@@ -128,6 +128,31 @@ async function marketAdminUpdate(parent, args, context, info) {
   return MarketAdmins.findOne({ _id });
 };
 
+async function traderAdminRegister(parent, args, context, info) {
+  const TraderAdmins = context.db.collection('traderAdmins');
+  const password = await bcrypt.hash(args.password, 12);
+  const testTraderAdmin =  await TraderAdmins.findOne({ email: args.email });
+  if (testTraderAdmin) {
+    throw new Error("An account already exists for this email address");
+  };
+  
+  const rtnDoc = await TraderAdmins.insertOne({
+    email: args.email,
+    firstName: args.firstName,
+    lastName: args.lastName,
+    password,
+  });
+  
+  const id = rtnDoc.insertedId
+  const traderAdmin = await TraderAdmins.findOne({ _id: id });
+  const token = jwt.sign({ traderAdminId: id }, APP_SECRET);
+  
+  return {
+    token,
+    traderAdmin,
+  };
+};
+
 module.exports = {
   customerRegister,
   customerLogin,
@@ -135,4 +160,5 @@ module.exports = {
   marketAdminRegister,
   marketAdminLogin,
   marketAdminUpdate,
+  traderAdminRegister,
 };

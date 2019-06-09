@@ -7,6 +7,8 @@ const Mutation = require('./resolvers/Mutation');
 const Customer = require('./resolvers/Customer');
 const MarketAdmin = require('./resolvers/MarketAdmin');
 const MarketAdminAuthPayload = require('./resolvers/MarketAdminAuthPayload');
+const TraderAdmin = require('./resolvers/TraderAdmin');
+const TraderAdminAuthPayload = require('./resolvers/TraderAdminAuthPayload');
 
 const resolvers = {
   Query,
@@ -14,6 +16,8 @@ const resolvers = {
   Customer,
   MarketAdmin,
   MarketAdminAuthPayload,
+  TraderAdmin,
+  TraderAdminAuthPayload,
 };
 
 const client = new MongoClient(mongodbUri, { useNewUrlParser: true });
