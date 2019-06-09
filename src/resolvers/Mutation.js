@@ -213,6 +213,8 @@ async function marketUpdate(parent, args, context, info) {
   if (directions) newDetails.directions = directions;
   if (imgUrl) newDetails.imgUrl = imgUrl;
   if (openHours) newDetails.openHours = openHours;
+  // May need to change, as will not be able to pass null or empty strings.
+  // What if you need to make a field blank?
   
   const rtnDoc = await Markets.findOneAndUpdate(
     { _id , admins: admin}, 
@@ -236,6 +238,33 @@ async function traderCardCreate(parent, args, context, info) {
   return await TraderCards.findOne({ _id: id });
 };
 
+async function traderCardUpdate(parent, args, context, info) {
+  const TraderCards = context.db.collection('traderCards');
+  const admin = ObjectId(getTraderAdminId(context));
+  const _id = ObjectId(args.id);
+
+  const newDetails = {};
+  const { name, blurb, imgUrl, links, produceTags } = args;
+  if (name) newDetails.name = name;
+  if (blurb) newDetails.blurb = blurb;
+  if (imgUrl) newDetails.imgUrl = imgUrl;
+  if (links) newDetails.links = links;
+  if (produceTags) newDetails.produceTags = produceTags;
+  // May need to change, as will not be able to pass null or empty strings.
+  // What if you need to make a field blank?
+  
+  const rtnDoc = await TraderCards.findOneAndUpdate(
+    { _id , admins: admin}, 
+    { $set: newDetails }, 
+    { returnOriginal: false }
+  );
+  const traderCard = rtnDoc.value;
+  
+  if (traderCard) {
+    return traderCard;
+  } else throw new Error('Update failed; you do not have admin rights for this task');
+};
+
 module.exports = {
   customerRegister,
   customerLogin,
@@ -249,4 +278,5 @@ module.exports = {
   marketCreate,
   marketUpdate,
   traderCardCreate,
+  traderCardUpdate,
 };

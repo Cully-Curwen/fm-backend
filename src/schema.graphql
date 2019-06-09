@@ -91,7 +91,14 @@ type Mutation {
     produceTags: [String!]!,
   ): TraderCard
 
-  # traderCardUpdate(): TraderCard
+  traderCardUpdate(
+    id: ID!,
+    name: String,
+    blurb: String,
+    imgUrl: String,
+    links: UrlLinksInput,
+    produceTags: [String!],
+  ): TraderCard
 
   # inventoryItemCreate(): TraderCard
   # inventroyItemUpdate(): TraderCard
