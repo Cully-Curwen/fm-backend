@@ -6,7 +6,11 @@ function id(parent, args, context, info) {
 
 async function traders(parent, args, context, info) {
   const TraderCards = context.db.collection('traderCards');
-  return parent.traders.map(id => TraderCards.findOne(ObjectId(id)));
+  const ids = parent.traders.map(ObjectId);
+  const cursor = await TraderCards.find({ _id: { $in: ids } });
+  console.log(cursor);
+  
+  return cursor.toArray();
 };
 
 module.exports = {
