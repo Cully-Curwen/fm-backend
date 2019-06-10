@@ -100,11 +100,20 @@ type Mutation {
     produceTags: [String!],
   ): TraderCard
 
-  # inventoryItemCreate(): TraderCard
+  inventoryItemCreate(
+    traderCardId: String!,
+    name: String!,
+    description: String!,
+    stock: Int!,
+    price: Int!,
+  ): TraderCard
+
   # inventroyItemUpdate(): TraderCard
+  
   # inventoryItemRemove(): TraderCard
 
   # cartAddItem(): MarketCart
+  
   # cartRemoveItem(): MarketCart
 
   # checkout(): Order
@@ -150,13 +159,13 @@ type Customer {
 }
 
 type MarketCart {
-  market_id: String!
+  marketId: String!
   items: [ItemsCart!]!
 }
 
 type ItemsCart {
-  trader_id: String!
-  market_id: String!
+  traderId: String!
+  marketId: String!
   name: String!
   description: String!
   quantity: Int!
@@ -227,8 +236,8 @@ input UrlLinksInput {
 
 type ItemsInventory {
   id: ID!
-  trader_id: String!
-  market_id: String!
+  traderCardId: String!
+  # marketId: String!
   name: String!
   description: String!
   stock: Int!
@@ -237,8 +246,8 @@ type ItemsInventory {
 
 type Order {
   id: ID!
-  customer_id: String!
-  market_id: String!
+  customerId: String!
+  marketId: String!
   orderCode: String!
   orderItems: [ItemsOrder!]!
   totalPrice: Int!
@@ -246,8 +255,8 @@ type Order {
 }
 
 type ItemsOrder {
-  trader_id: String!
-  market_id: String!
+  traderId: String!
+  marketId: String!
   name: String!
   description: String!
   quantity: Int!
