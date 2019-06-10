@@ -41,9 +41,19 @@ async function marketsList(parent, args, context, info) {
   return markets;
 };
 
+async function marketDetails(parent, args, context, info) {
+  const Markets = context.db.collection('markets');
+  const _id = ObjectId(args.marketId);
+  const market = await Markets.findOne({ _id });
+  if (!market) throw new Error('Error; No Market Found');
+
+  return market;
+};
+
 module.exports = {
   customerData,
   administeredMarkets,
   administeredTraders,
   marketsList,
+  marketDetails,
 };
