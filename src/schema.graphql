@@ -5,7 +5,8 @@ type Query {
 
   administeredTraders: [TraderCard!]  
 
-  # marketList(): [Market!]
+  marketsList: [Market!]
+
   # market(): Market
   # trader(traderCardId: ID!): TraderCard
 }

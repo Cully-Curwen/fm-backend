@@ -32,8 +32,18 @@ async function administeredTraders(parent, args, context, info) {
   return traderCards;
 };
 
+async function marketsList(parent, args, context, info) {
+  const Markets = context.db.collection('markets');
+  const cursor = await Markets.find({});
+  const markets = cursor.toArray();
+  if (!markets) throw new Error('Error; No Markets Found');
+
+  return markets;
+};
+
 module.exports = {
   customerData,
   administeredMarkets,
   administeredTraders,
+  marketsList,
 };
