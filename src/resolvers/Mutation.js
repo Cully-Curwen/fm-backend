@@ -254,7 +254,24 @@ async function marketAddTraderTo(parent, args, context, info) {
   
   if (market) {
     return market;
-  } else throw new Error('Update failed; you do not have admin rights for this task');
+  } else throw new Error('Operation failed;');
+};
+
+async function marketRemoveTraderFrom(parent, args, context, info) {
+  const Markets = context.db.collection('markets');
+  const admin = ObjectId(getMarketAdminId(context));
+  const _id = ObjectId(args.id);
+
+  const rtnDoc = await Markets.findOneAndUpdate(
+    { _id, admins: admin },
+    { $pull: { traders: ObjectId(args.traderCardId) } }, 
+    { returnOriginal: false }
+  );
+  const market = rtnDoc.value;
+  
+  if (market) {
+    return market;
+  } else throw new Error('UOperation failed;');
 };
   
 async function traderCardCreate(parent, args, context, info) {
@@ -454,6 +471,7 @@ module.exports = {
   marketAdminLogin,
   marketAdminUpdate,
   marketAddTraderTo,
+  marketRemoveTraderFrom,
   traderAdminRegister,
   traderAdminLogin,
   traderAdminUpdate,

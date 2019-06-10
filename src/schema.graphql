@@ -82,7 +82,7 @@ type Mutation {
 
   marketAddTraderTo(id: ID!, traderCardId: ID!): Market
 
-  # removeTraderFromMarket(): Market
+  marketRemoveTraderFrom(id: ID!, traderCardId: ID!): Market
 
   traderCardCreate(
     name: String!,
