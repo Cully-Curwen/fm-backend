@@ -12,7 +12,17 @@ async function customerData(parent, args, context, info) {
   return customer;
 };
 
+async function administeredMarkets(parent, args, context, info) {
+  const Markets = context.db.collection('markets');
+  const _id = ObjectId(getMarketAdminId(context));
+  const cursor = await Markets.find({ admins: ObjectId(_id) });
+  const markets = cursor.toArray();
+  if (!markets) throw new Error('Token invalid');
+
+  return markets;
+}
+
 module.exports = {
   customerData,
-
+  administeredMarkets,
 };
