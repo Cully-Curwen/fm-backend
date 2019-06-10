@@ -322,15 +322,13 @@ async function cartAddItem(parent, args, context, info) {
     { 
       _id, 
       "shoppingCarts.marketId": ObjectId(args.marketId), 
-      "shoppingCarts.items.itemId": ObjectId(args.item.itemId) 
+      "shoppingCarts.items.itemId": ObjectId(itemId) 
     },
     { $inc: { "shoppingCarts.$[marketCart].items.$[item].quantity": 1 } },
     {
       arrayFilters: [
-        {
-          "marketCart.marketId": ObjectId(args.marketId)},
-          {"item.itemId": ObjectId(args.item.itemId)
-        }
+        {"marketCart.marketId": ObjectId(args.marketId)},
+        {"item.itemId": ObjectId(itemId)}
       ],
       returnOriginal: false
     }
@@ -358,11 +356,40 @@ async function cartAddItem(parent, args, context, info) {
         { $push: { shoppingCarts: { marketId: ObjectId(args.marketId), items: [newItem] } } },
         { returnOriginal: false }
       );
-      return rtnDoc3.value;
+      if (rtnDoc3.value) {
+        return rtnDoc3.value;
+      } else throw new Error('Update failed; Item could not be found');
     };
   };
-
 };
+
+async function cartUpdateItem(parent, args, context, info) {
+  const Customers = context.db.collection('customers');
+  const _id = ObjectId(getCustomerId(context));
+  const customerAuth = await Customers.findOne({ _id });
+  if (!customerAuth) throw new Error('Token invalid');
+
+  const { traderCardId, itemId, name, description, price, quantity } = args.item
+  
+  const rtnDoc = await Customers.findOneAndUpdate(
+    { 
+      _id, 
+      "shoppingCarts.marketId": ObjectId(args.marketId), 
+      "shoppingCarts.items.itemId": ObjectId(itemId) 
+    },
+    { $set: { "shoppingCarts.$[marketCart].items.$[item].quantity": quantity } },
+    {
+      arrayFilters: [
+        {"marketCart.marketId": ObjectId(args.marketId)},
+        {"item.itemId": ObjectId(itemId)}
+      ],
+      returnOriginal: false
+    }
+  );
+  if (rtnDoc.value) {
+    return rtnDoc.value;
+  } else throw new Error('Update failed; Item could not be found');
+}
 
 module.exports = {
   customerRegister,
@@ -381,4 +408,5 @@ module.exports = {
   itemCreate,
   itemUpdate,
   cartAddItem,
+  cartUpdateItem,
 };

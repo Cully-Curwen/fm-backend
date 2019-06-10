@@ -122,6 +122,11 @@ type Mutation {
     marketId: String!,
     item: ItemsCartInput,
   ): Customer
+
+  cartUpdateItem(
+    marketId: String!,
+    item: ItemsCartInput,
+  ): Customer
   
   # cartRemoveItem(): Customer
 
