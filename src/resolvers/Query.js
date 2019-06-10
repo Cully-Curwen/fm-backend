@@ -50,10 +50,20 @@ async function marketDetails(parent, args, context, info) {
   return market;
 };
 
+async function traderCardDetails(parent, args, context, info) {
+  const TraderCards = context.db.collection('traderCards');
+  const _id = ObjectId(args.traderCardId);
+  const traderCard = TraderCards.findOne({ _id });
+  if (!traderCard) throw new Error('Error; No Trader Card Found');
+
+  return traderCard;
+};
+
 module.exports = {
   customerData,
   administeredMarkets,
   administeredTraders,
   marketsList,
   marketDetails,
+  traderCardDetails,
 };

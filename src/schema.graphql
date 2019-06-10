@@ -9,7 +9,7 @@ type Query {
 
   marketDetails(marketId: ID!): Market
 
-  # trader(traderCardId: ID!): TraderCard
+  traderCardDetails(traderCardId: ID!): TraderCard
 }
 
 type Mutation {
