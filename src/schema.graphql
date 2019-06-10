@@ -1,10 +1,15 @@
 type Query {
-  # administeredMarkets(): [Market!]
-  # administeredTraders(): [TraderCard!]  
+  customerData: Customer
 
-  # marketList(): [Market!]
-  # market(): Market
-  trader: TraderCard
+  administeredMarkets: [Market!]
+
+  administeredTraders: [TraderCard!]  
+
+  marketsList: [Market!]
+
+  marketDetails(marketId: ID!): Market
+
+  traderCardDetails(traderCardId: ID!): TraderCard
 }
 
 type Mutation {
