@@ -80,7 +80,8 @@ type Mutation {
     openHours: OpenHoursInput, 
   ): Market
 
-  # addTraderToMarket(): Market
+  marketAddTraderTo(id: ID!, traderCardId: ID!): Market
+
   # removeTraderFromMarket(): Market
 
   traderCardCreate(

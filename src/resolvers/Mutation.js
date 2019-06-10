@@ -193,7 +193,14 @@ async function marketCreate(parent, args, context, info) {
   const Markets = context.db.collection('markets');
   const admin = ObjectId(getMarketAdminId(context));
 
-  const rtnDoc = await Markets.insertOne({ admins: [admin], ...args, traders: [] });
+  const rtnDoc = await Markets.insertOne(
+    {
+      admins: [admin], 
+      ...args, 
+      traders: [], 
+      traderApplicants: [],
+    }
+  );
   const _id = rtnDoc.insertedId;
 
   return await Markets.findOne({ _id });
@@ -217,8 +224,30 @@ async function marketUpdate(parent, args, context, info) {
   // What if you need to make a field blank?
   
   const rtnDoc = await Markets.findOneAndUpdate(
-    { _id , admins: admin}, 
+    { _id , admins: admin }, 
     { $set: newDetails }, 
+    { returnOriginal: false }
+  );
+  const market = rtnDoc.value;
+  
+  if (market) {
+    return market;
+  } else throw new Error('Update failed; you do not have admin rights for this task');
+};
+
+async function marketAddTraderTo(parent, args, context, info) {
+  const Markets = context.db.collection('markets');
+  const admin = ObjectId(getMarketAdminId(context));
+  const _id = ObjectId(args.id);
+
+  const checkDB = await Markets.findOne(
+    { _id, admins: admin, traders: ObjectId(args.traderCardId) }
+  );
+  if (checkDB) throw new Error('Operation Failed; Trader is allready associated')
+
+  const rtnDoc = await Markets.findOneAndUpdate(
+    { _id, admins: admin },
+    { $push: { traders: ObjectId(args.traderCardId) } }, 
     { returnOriginal: false }
   );
   const market = rtnDoc.value;
@@ -424,6 +453,7 @@ module.exports = {
   marketAdminRegister,
   marketAdminLogin,
   marketAdminUpdate,
+  marketAddTraderTo,
   traderAdminRegister,
   traderAdminLogin,
   traderAdminUpdate,
