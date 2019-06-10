@@ -128,7 +128,10 @@ type Mutation {
     item: ItemsCartInput,
   ): Customer
   
-  # cartRemoveItem(): Customer
+  cartRemoveItem(
+    marketId: String!,
+    item: ItemsCartInput,
+  ): Customer
 
   # checkout(): Order
 }

@@ -370,6 +370,7 @@ async function cartUpdateItem(parent, args, context, info) {
   if (!customerAuth) throw new Error('Token invalid');
 
   const { traderCardId, itemId, name, description, price, quantity } = args.item
+  if (quantity === 0) return cartRemoveItem(parent, args, context, info);
   
   const rtnDoc = await Customers.findOneAndUpdate(
     { 
@@ -389,7 +390,32 @@ async function cartUpdateItem(parent, args, context, info) {
   if (rtnDoc.value) {
     return rtnDoc.value;
   } else throw new Error('Update failed; Item could not be found');
-}
+};
+
+async function cartRemoveItem(parent, args, context, info) {
+  const Customers = context.db.collection('customers');
+  const _id = ObjectId(getCustomerId(context));
+  const customerAuth = await Customers.findOne({ _id });
+  if (!customerAuth) throw new Error('Token invalid');
+
+  const { traderCardId, itemId, name, description, price, quantity } = args.item
+  
+  const rtnDoc = await Customers.findOneAndUpdate(
+    { 
+      _id, 
+      "shoppingCarts.marketId": ObjectId(args.marketId), 
+      "shoppingCarts.items.itemId": ObjectId(itemId) 
+    },
+    { $pull: { "shoppingCarts.$[marketCart].items": { itemId: ObjectId(itemId) } } },
+    {
+      arrayFilters: [ {"marketCart.marketId": ObjectId(args.marketId)}, ],
+      returnOriginal: false
+    }
+  );
+  if (rtnDoc.value) {
+    return rtnDoc.value;
+  } else throw new Error('Update failed; Item could not be found');
+};
 
 module.exports = {
   customerRegister,
@@ -409,4 +435,5 @@ module.exports = {
   itemUpdate,
   cartAddItem,
   cartUpdateItem,
+  cartRemoveItem,
 };
