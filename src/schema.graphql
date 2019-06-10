@@ -1,42 +1,140 @@
 type Query {
-  administeredMarkets(): [Market!]
-  administeredTraders(): [TraderCard!]  
+  # administeredMarkets(): [Market!]
+  # administeredTraders(): [TraderCard!]  
 
-  marketList(): [Market!]
-  market(): Market
-  trader(): TraderCard
+  # marketList(): [Market!]
+  # market(): Market
+  trader: TraderCard
 }
 
 type Mutation {
-  customerRegister(): CustomerAuthPayload
-  customerLogin(): CustomerAuthPayload
-  customerUpdate(): Customer
+  customerRegister(
+    email: String!, 
+    firstName: String!, 
+    lastName: String!, 
+    password: String!
+  ): CustomerAuthPayload
 
-  marketAdminRegister(): MarketAdminAuthPayload
-  marketAdminLogin(): MarketAdminAuthPayload
-  marketAdminUpdate(): MarketAdmin
+  customerLogin(email: String!, password: String!): CustomerAuthPayload
+  
+  customerUpdate(
+    email: String, 
+    firstName: String, 
+    lastName: String, 
+    password: String!, 
+    newPassword: String
+  ): Customer
 
-  traderAdminRegister(): TraderAdminAuthPayload
-  traderAdminLogin(): TraderAdminAuthPayload
-  traderAdminUpdate(): TraderAdmin
+  marketAdminRegister(
+    email: String!, 
+    firstName: String!, 
+    lastName: String!, 
+    password: String!
+  ): MarketAdminAuthPayload
+  
+  marketAdminLogin(email: String!, password: String!): MarketAdminAuthPayload
+  
+  marketAdminUpdate(
+    email: String, 
+    firstName: String, 
+    lastName: String, 
+    password: String!, 
+    newPassword: String
+  ): MarketAdmin
 
-  marketCreate(): Market
-  marketUpdate(): Market
+  traderAdminRegister(
+    email: String!, 
+    firstName: String!, 
+    lastName: String!, 
+    password: String!
+  ): TraderAdminAuthPayload
+  
+  traderAdminLogin(email: String!, password: String!): TraderAdminAuthPayload
+  
+  traderAdminUpdate(
+    email: String, 
+    firstName: String, 
+    lastName: String, 
+    password: String!, 
+    newPassword: String
+  ): TraderAdmin
 
-  addTraderToMarket(): Market
-  removeTraderFromMarket(): Market
+  marketCreate(
+    name: String!, 
+    blurb: String!, 
+    address: String, 
+    geoLocation: GeoPointInput!, 
+    directions: String,
+    imgUrl: String,
+    openHours: OpenHoursInput!,
+  ): Market
+  
+  marketUpdate(
+    id: ID!,
+    name: String, 
+    blurb: String, 
+    address: String, 
+    geoLocation: GeoPointInput, 
+    directions: String,
+    imgUrl: String,
+    openHours: OpenHoursInput, 
+  ): Market
 
-  traderCardCreate(): TraderCard
-  traderCardUpdate(): TraderCard
+  marketAddTraderTo(id: ID!, traderCardId: ID!): Market
 
-  inventoryItemCreate(): TraderCard
-  inventroyItemUpdate(): TraderCard
-  inventoryItemRemove(): TraderCard
+  marketRemoveTraderFrom(id: ID!, traderCardId: ID!): Market
 
-  cartAddItem(): MarketCart
-  cartRemoveItem(): MarketCart
+  traderCardCreate(
+    name: String!,
+    blurb: String!,
+    imgUrl: String,
+    links: UrlLinksInput,
+    produceTags: [String!]!,
+  ): TraderCard
 
-  checkout(): Order
+  traderCardUpdate(
+    id: ID!,
+    name: String,
+    blurb: String,
+    imgUrl: String,
+    links: UrlLinksInput,
+    produceTags: [String!],
+  ): TraderCard
+
+  itemCreate(
+    traderCardId: String!,
+    name: String!,
+    description: String!,
+    stock: Int!,
+    price: Int!,
+  ): Item
+
+  itemUpdate(
+    id: ID!
+    name: String!,
+    description: String!,
+    stock: Int!,
+    price: Int!,
+  ): Item
+  
+  # itemRemove(): Item
+
+  cartAddItem(
+    marketId: String!,
+    item: ItemsCartInput,
+  ): Customer
+
+  cartUpdateItem(
+    marketId: String!,
+    item: ItemsCartInput,
+  ): Customer
+  
+  cartRemoveItem(
+    marketId: String!,
+    item: ItemsCartInput,
+  ): Customer
+
+  # checkout(): Order
 }
 
 type CustomerAuthPayload {
@@ -57,18 +155,21 @@ type TraderAdminAuthPayload {
 }
 
 type MarketAdmin {
+  id: ID!
   email: String!
   firstName: String!
   lastName: String!
 }
 
 type TraderAdmin {
+  id: ID!
   email: String!
   firstName: String!
   lastName: String!
 }
 
 type Customer {
+  id: ID!
   email: String!
   firstName: String!
   lastName: String!
@@ -76,21 +177,31 @@ type Customer {
 }
 
 type MarketCart {
-  market_id: String!
+  market: Market!
   items: [ItemsCart!]!
 }
 
 type ItemsCart {
-  trader_id: String!
-  market_id: String!
+  traderCardId: String!
+  itemId: String!
   name: String!
   description: String!
-  quantity: Int!
   price: Int!
+  quantity: Int!
+}
+
+input ItemsCartInput {
+  traderCardId: String!
+  itemId: String!
+  name: String!
+  description: String!
+  price: Int!
+  quantity: Int!
 }
 
 type Market {
-  admin_id: String!
+  id: ID!
+  admins: [String!]!
   name: String!
   blurb: String!
   address: String
@@ -106,20 +217,32 @@ type GeoPoint {
   coordinates: [Float!]!
 }
 
+input GeoPointInput {
+  type: String!
+  coordinates: [Float!]!
+}
+
 type OpenHours {
   openTime: String!
   closeTime: String!
   tradingDay: String!
 }
 
+input OpenHoursInput {
+  openTime: String!
+  closeTime: String!
+  tradingDay: String!
+}
+
 type TraderCard {
-  admin_id: String!
+  id: ID!
+  admins: [String!]!
   name: String!
   blurb: String!
   imgUrl: String
   links: UrlLinks
   produceTags: [String!]!
-  inventory: [ItemsInventory!]!
+  inventory: [Item!]!
 }
 
 type UrlLinks {
@@ -130,9 +253,17 @@ type UrlLinks {
   Instagram: String
 }
 
-type ItemsInventory {
-  trader_id: String!
-  market_id: String!
+input UrlLinksInput {
+  website: String
+  email: String
+  facebook: String
+  twitter: String
+  Instagram: String
+}
+
+type Item {
+  id: ID!
+  traderCardId: String!
   name: String!
   description: String!
   stock: Int!
@@ -140,8 +271,9 @@ type ItemsInventory {
 }
 
 type Order {
-  customer_id: String!
-  market_id: String!
+  id: ID!
+  customerId: String!
+  marketId: String!
   orderCode: String!
   orderItems: [ItemsOrder!]!
   totalPrice: Int!
@@ -149,8 +281,8 @@ type Order {
 }
 
 type ItemsOrder {
-  trader_id: String!
-  market_id: String!
+  traderId: String!
+  marketId: String!
   name: String!
   description: String!
   quantity: Int!
