@@ -2,7 +2,8 @@ type Query {
   customerData: Customer
 
   administeredMarkets: [Market!]
-  # administeredTraders(): [TraderCard!]  
+
+  administeredTraders: [TraderCard!]  
 
   # marketList(): [Market!]
   # market(): Market

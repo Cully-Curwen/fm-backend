@@ -20,9 +20,20 @@ async function administeredMarkets(parent, args, context, info) {
   if (!markets) throw new Error('Token invalid');
 
   return markets;
-}
+};
+
+async function administeredTraders(parent, args, context, info) {
+  const TraderCards = context.db.collection('traderCards');
+  const _id = ObjectId(getTraderAdminId(context));
+  const cursor = await TraderCards.find({ admins: ObjectId(_id) });
+  const traderCards = cursor.toArray();
+  if (!traderCards) throw new Error('Token invalid');
+
+  return traderCards;
+};
 
 module.exports = {
   customerData,
   administeredMarkets,
+  administeredTraders,
 };
