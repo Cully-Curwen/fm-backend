@@ -301,6 +301,69 @@ async function itemUpdate(parent, args, context, info) {
   } else throw new Error('Update failed; Item could not be found');
 };
 
+async function cartAddItem(parent, args, context, info) {
+  const Customers = context.db.collection('customers');
+  const _id = ObjectId(getCustomerId(context));
+  const customerAuth = await Customers.findOne({ _id });
+  if (!customerAuth) throw new Error('Token invalid');
+
+  const { traderCardId, itemId, name, description, price, quantity } = args.item
+  const newItem = {
+    traderCardId: ObjectId(traderCardId),
+    itemId: ObjectId(itemId),
+    name,
+    description,
+    price,
+    quantity,
+  };
+
+  // Will increment the existing Item in existing MarketCart
+  const rtnDoc = await Customers.findOneAndUpdate(
+    { 
+      _id, 
+      "shoppingCarts.marketId": ObjectId(args.marketId), 
+      "shoppingCarts.items.itemId": ObjectId(args.item.itemId) 
+    },
+    { $inc: { "shoppingCarts.$[marketCart].items.$[item].quantity": 1 } },
+    {
+      arrayFilters: [
+        {
+          "marketCart.marketId": ObjectId(args.marketId)},
+          {"item.itemId": ObjectId(args.item.itemId)
+        }
+      ],
+      returnOriginal: false
+    }
+  );
+  
+  if (rtnDoc.value) {
+    return rtnDoc.value;
+  } else {
+    // Will find existing MarketCart, but not Item and push in the Item
+    const rtnDoc2 = await Customers.findOneAndUpdate(
+      { _id, "shoppingCarts.marketId": ObjectId(args.marketId) },
+      { $push: { "shoppingCarts.$[market].items": newItem } },
+      {
+        arrayFilters: [{"market.marketId": ObjectId(args.marketId) }],
+        returnOriginal: false
+      }
+    );
+
+    if (rtnDoc2.value) {
+      return rtnDoc2.value;
+    } else {
+      // will create a new MarketCart and insert Item
+      const rtnDoc3 = await Customers.findOneAndUpdate(
+        { _id },
+        { $push: { shoppingCarts: { marketId: ObjectId(args.marketId), items: [newItem] } } },
+        { returnOriginal: false }
+      );
+      return rtnDoc3.value;
+    };
+  };
+
+};
+
 module.exports = {
   customerRegister,
   customerLogin,
@@ -317,4 +380,5 @@ module.exports = {
   traderCardUpdate,
   itemCreate,
   itemUpdate,
+  cartAddItem,
 };

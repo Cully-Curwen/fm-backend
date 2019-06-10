@@ -118,9 +118,12 @@ type Mutation {
   
   # itemRemove(): Item
 
-  # cartAddItem(): MarketCart
+  cartAddItem(
+    marketId: String!,
+    item: ItemsCartInput,
+  ): Customer
   
-  # cartRemoveItem(): MarketCart
+  # cartRemoveItem(): Customer
 
   # checkout(): Order
 }
@@ -165,17 +168,26 @@ type Customer {
 }
 
 type MarketCart {
-  marketId: String!
+  market: Market!
   items: [ItemsCart!]!
 }
 
 type ItemsCart {
-  traderId: String!
-  # marketId: String!
+  traderCardId: String!
+  itemId: String!
   name: String!
   description: String!
-  quantity: Int!
   price: Int!
+  quantity: Int!
+}
+
+input ItemsCartInput {
+  traderCardId: String!
+  itemId: String!
+  name: String!
+  description: String!
+  price: Int!
+  quantity: Int!
 }
 
 type Market {
