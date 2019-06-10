@@ -277,27 +277,28 @@ async function itemCreate(parent, args, context, info) {
 };
 
 async function itemUpdate(parent, args, context, info) {
-  
+  const Items = context.db.collection('items');
+  const admin = ObjectId(getTraderAdminId(context));
+  const _id = ObjectId(args.id);
+
+  const { name, description, stock, price } = args;
   const rtnDoc = await Items.findOneAndUpdate(
-    { _id , admins: admin}, 
+    { _id }, 
     {
-      $push: {
-        inventory: {
-          _id: ObjectId(),
-          name,
-          description,
-          stock,
-          price,
-        }
+      $set: {
+        name,
+        description,
+        stock,
+        price,
       }
     }, 
     { returnOriginal: false }
   );
-  const traderCard = rtnDoc.value;
+  const item = rtnDoc.value;
   
-  if (traderCard) {
-    return traderCard;
-  } else throw new Error('Update failed; you do not have admin rights for this task');
+  if (item) {
+    return item;
+  } else throw new Error('Update failed; Item could not be found');
 };
 
 module.exports = {
@@ -315,4 +316,5 @@ module.exports = {
   traderCardCreate,
   traderCardUpdate,
   itemCreate,
+  itemUpdate,
 };
