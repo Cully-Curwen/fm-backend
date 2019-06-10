@@ -21,9 +21,9 @@ async function customerRegister(parent, args, context, info) {
     shoppingCarts: [],
   });
   
-  const id = rtnDoc.insertedId
-  const customer = await Customers.findOne({ _id: id });
-  const token = jwt.sign({ customerId: id }, APP_SECRET);
+  const _id = rtnDoc.insertedId
+  const customer = await Customers.findOne({ _id });
+  const token = jwt.sign({ customerId: _id }, APP_SECRET);
   
   return {
     token,
@@ -82,9 +82,9 @@ async function marketAdminRegister(parent, args, context, info) {
     password,
   });
   
-  const id = rtnDoc.insertedId
-  const marketAdmin = await MarketAdmins.findOne({ _id: id });
-  const token = jwt.sign({ marketAdminId: id }, APP_SECRET);
+  const _id = rtnDoc.insertedId
+  const marketAdmin = await MarketAdmins.findOne({ _id });
+  const token = jwt.sign({ marketAdminId: _id }, APP_SECRET);
   
   return {
     token,
@@ -143,9 +143,9 @@ async function traderAdminRegister(parent, args, context, info) {
     password,
   });
   
-  const id = rtnDoc.insertedId
-  const traderAdmin = await TraderAdmins.findOne({ _id: id });
-  const token = jwt.sign({ traderAdminId: id }, APP_SECRET);
+  const _id = rtnDoc.insertedId
+  const traderAdmin = await TraderAdmins.findOne({ _id });
+  const token = jwt.sign({ traderAdminId: _id }, APP_SECRET);
   
   return {
     token,
@@ -194,9 +194,9 @@ async function marketCreate(parent, args, context, info) {
   const admin = ObjectId(getMarketAdminId(context));
 
   const rtnDoc = await Markets.insertOne({ admins: [admin], ...args, traders: [] });
-  const id = rtnDoc.insertedId;
+  const _id = rtnDoc.insertedId;
 
-  return await Markets.findOne({ _id: id });
+  return await Markets.findOne({ _id });
 };
 
 async function marketUpdate(parent, args, context, info) {
@@ -232,10 +232,10 @@ async function traderCardCreate(parent, args, context, info) {
   const TraderCards = context.db.collection('traderCards');
   const admin = ObjectId(getTraderAdminId(context));
   
-  const rtnDoc = await TraderCards.insertOne({ admins: [admin], ...args, inventory: [] });
-  const id = rtnDoc.insertedId;
+  const rtnDoc = await TraderCards.insertOne({ admins: [admin], ...args });
+  const _id = rtnDoc.insertedId;
 
-  return await TraderCards.findOne({ _id: id });
+  return await TraderCards.findOne({ _id });
 };
 
 async function traderCardUpdate(parent, args, context, info) {
@@ -265,13 +265,20 @@ async function traderCardUpdate(parent, args, context, info) {
   } else throw new Error('Update failed; you do not have admin rights for this task');
 };
 
-async function inventoryItemCreate(parent, args, context, info) {
-  const TraderCards = context.db.collection('traderCards');
+async function itemCreate(parent, args, context, info) {
+  const Items = context.db.collection('items');
   const admin = ObjectId(getTraderAdminId(context));
-  const _id = ObjectId(args.traderCardId);
-  const { name, description, stock, price } = args;
+  const traderCardId = ObjectId(args.traderCardId);
 
-  const rtnDoc = await TraderCards.findOneAndUpdate(
+  const rtnDoc = await Items.insertOne({ ...args, traderCardId });
+  const _id = rtnDoc.insertedId;
+
+  return await Items.findOne({ _id});
+};
+
+async function itemUpdate(parent, args, context, info) {
+  
+  const rtnDoc = await Items.findOneAndUpdate(
     { _id , admins: admin}, 
     {
       $push: {
@@ -307,5 +314,5 @@ module.exports = {
   marketUpdate,
   traderCardCreate,
   traderCardUpdate,
-  inventoryItemCreate,
+  itemCreate,
 };

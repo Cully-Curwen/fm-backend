@@ -100,17 +100,23 @@ type Mutation {
     produceTags: [String!],
   ): TraderCard
 
-  inventoryItemCreate(
+  itemCreate(
     traderCardId: String!,
     name: String!,
     description: String!,
     stock: Int!,
     price: Int!,
-  ): TraderCard
+  ): Item
 
-  # inventroyItemUpdate(): TraderCard
+  itemUpdate(
+    id: ID!
+    name: String!,
+    description: String!,
+    stock: Int!,
+    price: Int!,
+  ): Item
   
-  # inventoryItemRemove(): TraderCard
+  # itemRemove(): Item
 
   # cartAddItem(): MarketCart
   
@@ -165,7 +171,7 @@ type MarketCart {
 
 type ItemsCart {
   traderId: String!
-  marketId: String!
+  # marketId: String!
   name: String!
   description: String!
   quantity: Int!
@@ -215,7 +221,7 @@ type TraderCard {
   imgUrl: String
   links: UrlLinks
   produceTags: [String!]!
-  inventory: [ItemsInventory!]!
+  inventory: [Item!]!
 }
 
 type UrlLinks {
@@ -234,10 +240,9 @@ input UrlLinksInput {
   Instagram: String
 }
 
-type ItemsInventory {
+type Item {
   id: ID!
   traderCardId: String!
-  # marketId: String!
   name: String!
   description: String!
   stock: Int!
