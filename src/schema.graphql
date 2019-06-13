@@ -1,6 +1,10 @@
 type Query {
   customerData: Customer
 
+  marketAdminData: MarketAdmin
+
+  traderAdminData: TraderAdmin
+
   administeredMarkets: [Market!]
 
   administeredTraders: [TraderCard!]  

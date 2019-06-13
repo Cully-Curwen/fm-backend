@@ -12,6 +12,26 @@ async function customerData(parent, args, context, info) {
   return customer;
 };
 
+async function marketAdminData(parnet, args, context, info) {
+  const MarketAdmins = context.db.collection('marketAdmins');
+  const _id = ObjectId(getMarketAdminId(context));
+
+  const marketAdmin = await MarketAdmins.findOne({ _id });
+  if (!marketAdmin) throw new Error('Token invalid');
+
+  return marketAdmin;
+};
+
+async function traderAdminData(parnet, args, context, info) {
+  const TraderAdmins = context.db.collection('traderAdmins');
+  const _id = ObjectId(getTraderAdminId(context));
+
+  const traderAdmin = await TraderAdmins.findOne({ _id });
+  if (!traderAdmin) throw new Error('Token invalid');
+
+  return traderAdmin;
+};
+
 async function administeredMarkets(parent, args, context, info) {
   const Markets = context.db.collection('markets');
   const _id = ObjectId(getMarketAdminId(context));
@@ -61,6 +81,8 @@ async function traderCardDetails(parent, args, context, info) {
 
 module.exports = {
   customerData,
+  marketAdminData,
+  traderAdminData,
   administeredMarkets,
   administeredTraders,
   marketsList,
