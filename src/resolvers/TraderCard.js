@@ -4,6 +4,14 @@ function id(parent, args, context, info) {
   return parent._id;
 };
 
+async function market(parent, args, context, info) {
+  const Markets = context.db.collection('markets');
+  const _id = ObjectId(parent.marketId);
+  const market = await Markets.findOne({ _id });
+
+  return market;
+};
+
 async function inventory(parent, args, context, info) {
   const Items = context.db.collection('items');
   const traderCardId = ObjectId(parent._id);
@@ -15,4 +23,5 @@ async function inventory(parent, args, context, info) {
 module.exports = {
   id,
   inventory,
+  market,
 };

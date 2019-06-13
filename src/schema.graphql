@@ -242,6 +242,7 @@ input OpenHoursInput {
 type TraderCard {
   id: ID!
   admins: [String!]!
+  market: Market
   name: String!
   blurb: String!
   imgUrl: String

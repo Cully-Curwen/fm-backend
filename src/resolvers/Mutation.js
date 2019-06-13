@@ -237,41 +237,38 @@ async function marketUpdate(parent, args, context, info) {
 
 async function marketAddTraderTo(parent, args, context, info) {
   const Markets = context.db.collection('markets');
+  const TraderCards = context.db.collection('traderCards');
   const admin = ObjectId(getMarketAdminId(context));
-  const _id = ObjectId(args.id);
+  const marketId = ObjectId(args.id);
+  const TraderCardId = ObjectId(args.TraderCardId);
 
-  const checkDB = await Markets.findOne(
-    { _id, admins: admin, traders: ObjectId(args.traderCardId) }
-  );
-  if (checkDB) throw new Error('Operation Failed; Trader is allready associated')
+  const market = await Markets.findOne({ _id: marketId, admins: admin });
+  if (!market) throw new Error('Operation failed;');
 
-  const rtnDoc = await Markets.findOneAndUpdate(
-    { _id, admins: admin },
-    { $push: { traders: ObjectId(args.traderCardId) } }, 
-    { returnOriginal: false }
+  await TraderCards.updateOne(
+    { _id: TraderCardId, marketId: { $eq: null } },
+    { $set: { marketId: marketId } }, 
   );
-  const market = rtnDoc.value;
-  
-  if (market) {
-    return market;
-  } else throw new Error('Operation failed;');
+
+  return market;
 };
 
 async function marketRemoveTraderFrom(parent, args, context, info) {
   const Markets = context.db.collection('markets');
+  const TraderCards = context.db.collection('traderCards');
   const admin = ObjectId(getMarketAdminId(context));
-  const _id = ObjectId(args.id);
+  const marketId = ObjectId(args.id);
+  const TraderCardId = ObjectId(args.TraderCardId);
 
-  const rtnDoc = await Markets.findOneAndUpdate(
-    { _id, admins: admin },
-    { $pull: { traders: ObjectId(args.traderCardId) } }, 
-    { returnOriginal: false }
+  const market = await Markets.findOne({ _id: marketId, admins: admin });
+  if (!market) throw new Error('Operation failed;');
+
+  await TraderCards.updateOne(
+    { _id: TraderCardId, marketId },
+    { $unset: { marketId: "" } }, 
   );
-  const market = rtnDoc.value;
   
-  if (market) {
-    return market;
-  } else throw new Error('UOperation failed;');
+  return market;
 };
   
 async function traderCardCreate(parent, args, context, info) {
