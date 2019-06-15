@@ -260,7 +260,7 @@ type UrlLinks {
   email: String
   facebook: String
   twitter: String
-  Instagram: String
+  instagram: String
 }
 
 input UrlLinksInput {
@@ -268,7 +268,7 @@ input UrlLinksInput {
   email: String
   facebook: String
   twitter: String
-  Instagram: String
+  instagram: String
 }
 
 type Item {
