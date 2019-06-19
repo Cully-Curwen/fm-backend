@@ -456,6 +456,15 @@ async function cartRemoveItem(parent, args, context, info) {
     }
   );
   if (rtnDoc.value) {
+    if (rtnDoc.value.shoppingCarts.filter(basket => basket.marketId == args.marketId).item ) {
+      const rtnDoc2 = await Customers.findOneAndUpdate(
+        { _id, "shoppingCarts.marketId": ObjectId(args.marketId) },
+        { $pull: { shoppingCarts: { marketId: ObjectId(args.marketId) } } }
+      );
+
+      if (rtnDoc2.value) return rtnDoc2.value;
+    }; 
+    
     return rtnDoc.value;
   } else throw new Error('Update failed; Item could not be found');
 };

@@ -186,6 +186,7 @@ type Customer {
 }
 
 type MarketCart {
+  id: ID!
   market: Market!
   items: [ItemsCart!]!
 }
