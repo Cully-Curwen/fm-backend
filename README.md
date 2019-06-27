@@ -1,87 +1,50 @@
 # Farmers' Market Platform - backend server
 
-One Paragraph of project description goes here
+A platform for Customer to discover their local farmers' markets, and pre-order produce for market day. It allows Market Administrator to share information about their Market and organise the Trader of the stalls in one location. The Traders can also share information about themselves, more importantly they can list their stall wares, for Customers to browse and pre-order produce.
 
 ## Getting Started
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+After making a copy of the Repo you will need to create a secrets.js file in the src folder (src/secrets.js). This will need to export;
+1. mongodbUri - The Uri for the MongoDB server
+2. APP_SECRET - Secret to Sign JWT Token
+
+```
+module.exports = {
+  mongodbUri,
+  APP_SECRET,
+}
+```
+
+There server will by default use port 4000, this can be changed in src/index.js
 
 ### Prerequisites
 
-What things you need to install the software and how to install them
+You will need a MongoDB Database, a free MongoDB Atlas M0 database is all that is needed. Once you have a cluster up and running you can connect the application via MongoDB instructions. The Uri provided is the one that you need to place in the src/secrets.js file.
 
-```
-Give examples
-```
 
 ### Installing
 
-A step by step series of examples that tell you how to get a development env running
-
-Say what the step will be
-
+You will need to install the dependencies first with the comand 
 ```
-Give the example
+npm install
 ```
 
-And repeat
+Once you have created the secrets.js file you can launch the server from repo in the terminal with the command
 
 ```
-until finished
+node src/index.js
 ```
 
-End with an example of getting some data out of the system or using it for a little demo
+The server is designed to be the backend for the repo fm-client. Though by navigation in your browser to localhost/4000 you can test the functionality in GraphQL playground provided by graphql-yoga.
 
-## Running the tests
-
-Explain how to run the automated tests for this system
-
-### Break down into end to end tests
-
-Explain what these tests test and why
-
-```
-Give an example
-```
-
-### And coding style tests
-
-Explain what these tests test and why
-
-```
-Give an example
-```
-
-## Deployment
-
-Add additional notes about how to deploy this on a live system
 
 ## Built With
 
-* [Dropwizard](http://www.dropwizard.io/1.0.2/docs/) - The web framework used
-* [Maven](https://maven.apache.org/) - Dependency Management
-* [ROME](https://rometools.github.io/rome/) - Used to generate RSS Feeds
-
-## Contributing
-
-Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
-
-## Versioning
-
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags). 
+* [graphql-yoga](https://github.com/prisma/graphql-yoga) -  Fully-featured GraphQL Server
+* [mongodb](https://github.com/mongodb/node-mongodb-native) - Mongo DB Native NodeJS Driver 
+* [jsonwebtoken](https://github.com/auth0/node-jsonwebtoken#readme) - JsonWebToken implementation for node.js
+* [bcryptjs](https://github.com/dcodeIO/bcrypt.js#readme)
 
 ## Authors
 
-* **Billie Thompson** - *Initial work* - [PurpleBooth](https://github.com/PurpleBooth)
-
-See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
-
-## Acknowledgments
-
-* Hat tip to anyone whose code was used
-* Inspiration
-* etc
+* **Cully Curwen** - *Initial work*
