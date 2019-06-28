@@ -9,6 +9,12 @@ After making a copy of the Repo you will need to create a secrets.js file in the
 2. APP_SECRET - Secret to Sign JWT Token
 
 ```
+// src/secrets.js
+
+const mongodbUri = '<MongoDB Uri>';
+
+const APP_SECRET = '<Secret>';
+
 module.exports = {
   mongodbUri,
   APP_SECRET,
@@ -35,7 +41,7 @@ Once you have created the secrets.js file you can launch the server from repo in
 node src/index.js
 ```
 
-The server is designed to be the backend for the repo fm-client. Though by navigation in your browser to localhost/4000 you can test the functionality in GraphQL playground provided by graphql-yoga.
+The server is designed to be the backend for the repo [fm-client](https://github.com/Cully-Curwen/fm-client). Though by navigation in your browser to localhost/4000 you can test the functionality in GraphQL playground provided by graphql-yoga.
 
 
 ## Built With
@@ -47,4 +53,4 @@ The server is designed to be the backend for the repo fm-client. Though by navig
 
 ## Authors
 
-* **Cully Curwen** - *Initial work*
+* **[Cully Curwen](https://github.com/Cully-Curwen)** - *Initial work*
